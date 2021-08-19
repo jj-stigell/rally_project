@@ -46,7 +46,9 @@ void new_driver(struct driver *add_new, char *input_lastname, char *input_team) 
 
 void update_total_time(char *lastname, int hours, int minutes, int seconds) {
 	
-	if (hours < 0) {
+	if (!driver_exist(lastname)) {
+		printf("Driver \"%s\" does not exist.\n", lastname);
+	} else if (hours < 0) {
 		printf("Hour cannot be negative.\n");
 	} else if (minutes < 0 || minutes > 59) {
 		printf("Minute cannot be negative or greater than 59.\n");
@@ -81,11 +83,7 @@ void update_total_time(char *lastname, int hours, int minutes, int seconds) {
 			}
 			ptr = ptr->next;
 		}
-		if (!driver_exist(lastname)) {
-			printf("Driver \"%s\" does not exist.\n", lastname);
-		} else {
-			printf("SUCCESS\n");
-		}
+		printf("SUCCESS\n");
 	}
 }
 
