@@ -4,6 +4,7 @@
 #define N 45
 
 struct driver {
+	//database for drivers
     char lastname[N]; 
     char team[N];
     int hours;
@@ -12,12 +13,12 @@ struct driver {
 	struct driver *next; //pointer for next in linked list.
 };
 struct driver *head = NULL;
-struct driver *current = NULL;
 
 int driver_exist(char *lastname) {
-
-	//check if the driver already exist.
+	
+	/*checks if the driver already exist.*/
 	struct driver *ptr = head;
+	
 	while (ptr != NULL) {
 		if(strcmp(ptr->lastname, lastname) == 0) {
 			return 1; //driver found.
@@ -29,10 +30,11 @@ int driver_exist(char *lastname) {
 
 void new_driver(struct driver *add_new, char *input_lastname, char *input_team) {
 	
-	if (driver_exist(input_lastname) == 1) {
+	if (driver_exist(input_lastname)) {
 		printf("Driver \"%s\" is already in the database.\n", input_lastname);
 	} else {
-		//add a new driver, time set to 0. updated driver time using function update_total_time.
+		/*add a new driver, initial time set to 0. 
+		updated driver time using function update_total_time.*/
 		strcpy(add_new->lastname , input_lastname);
 		strcpy(add_new->team , input_team);
 		add_new->hours = 0;
@@ -46,6 +48,7 @@ void new_driver(struct driver *add_new, char *input_lastname, char *input_team) 
 
 void update_total_time(char *lastname, int hours, int minutes, int seconds) {
 	
+	/*First check if the driver exist, after that check that time input is correct*/
 	if (!driver_exist(lastname)) {
 		printf("Driver \"%s\" does not exist.\n", lastname);
 	} else if (hours < 0) {
@@ -57,30 +60,32 @@ void update_total_time(char *lastname, int hours, int minutes, int seconds) {
 	} else {
 	
 		struct driver *ptr = head;
+		
 		while (ptr != NULL) {
 			if(strcmp(ptr->lastname, lastname) == 0) {
-				//sum together current recorded time and new time.
+				/*sum together current recorded time and new time.*/
 				hours += ptr->hours;
 				minutes += ptr->minutes;
 				seconds += ptr->seconds;
 
-				//add one minute for every 60 seconds.
-				while (seconds >= 60) {
+				/*add one minute for every 60 seconds.*/
+				while (seconds > 59) {
 					seconds -= 60;
 					minutes++;
 				}
 
-				//add one hour for every 60 minutes.
-				while (minutes >= 60) {
+				/*add one hour for every 60 minutes.*/
+				while (minutes > 59) {
 					minutes -= 60;
 					hours++;
 				}
 
-				//update the time to driver
+				/*update the time to drivers database*/
 				ptr->hours = hours;
 				ptr->minutes = minutes;
 				ptr->seconds = seconds;
 			}
+			
 			ptr = ptr->next;
 		}
 		printf("SUCCESS\n");
@@ -89,6 +94,8 @@ void update_total_time(char *lastname, int hours, int minutes, int seconds) {
 
 void print_situation() {
 	
+	/*print current database and its drivers one by one. 
+	printing order is the order drivers are inputted*/
 	struct driver *ptr = head;
 	if (ptr == NULL) {
 		printf("No drivers added\n");
@@ -100,10 +107,10 @@ void print_situation() {
 	}
 }
 
-void save_results(char *save_name) {
+void save_results(char *filename) {
 	
 	FILE *file_ptr = NULL;
-    file_ptr = fopen(save_name, "w");
+    file_ptr = fopen(filename, "w"); //open or create file for writing.
     if (NULL != file_ptr) {
 		
 		struct driver *ptr = head;
@@ -125,11 +132,13 @@ void save_results(char *save_name) {
 }
 
 void open_results() {
+	/*Not implemented*/
 }
 
 int main(void) {
+	
 	int quit = 1, hours, minutes, seconds;
-	char input[40], lastname[20], command[1], team[20];
+	char input[40], command[1], lastname[20], team[20];
 	
 	while(quit) {
 		
@@ -157,7 +166,7 @@ int main(void) {
 					save_results(lastname);
 					break;
 				case 'O':
-					sscanf(input, "%s %s", command, lastname);
+					sscanf(input, "%s %s", command, lastname); //lastname will be the file name.
 					open_results();
 					break;
 				case 'Q':
