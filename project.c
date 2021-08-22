@@ -28,9 +28,11 @@ int driver_exist(char *lastname) {
 	return 0; //if driver is not found from database.
 }
 
-void new_driver(struct driver *add_new, char *input_lastname, char *input_team) {
+void new_driver(struct driver *add_new, char *input_lastname, char *input_team, int arguments) {
 	
-	if (driver_exist(input_lastname)) {
+	if (arguments < 3) { //check that user inputted correct amount of data.
+		printf("A should be followed by exactly 2 arguments.\n");
+	} else if (driver_exist(input_lastname)) { //check if driver exist. 
 		printf("Driver \"%s\" is already in the database.\n", input_lastname);
 	} else {
 		/*add a new driver, initial time set to 0. 
@@ -46,16 +48,17 @@ void new_driver(struct driver *add_new, char *input_lastname, char *input_team) 
 	}
 }
 
-void update_total_time(char *lastname, int hours, int minutes, int seconds) {
+void update_total_time(char *lastname, int hours, int minutes, int seconds, int arguments) {
 	
-	/*First check if the driver exist, after that check that time input is correct*/
-	if (!driver_exist(lastname)) {
+	if (arguments < 5) { 
+		printf("A should be followed by exactly 4 arguments.\n");
+	}  else if (!driver_exist(lastname)) { //check if driver exist. 
 		printf("Driver \"%s\" does not exist.\n", lastname);
-	} else if (hours < 0) {
+	} else if (hours < 0) { //check if hours are negative.
 		printf("Hour cannot be negative.\n");
-	} else if (minutes < 0 || minutes > 59) {
+	} else if (minutes < 0 || minutes > 59) { //check if minutes are negative or over 59
 		printf("Minute cannot be negative or greater than 59.\n");
-	} else if (seconds < 0 || seconds > 59) {
+	} else if (seconds < 0 || seconds > 59) { //check if seconds are negative or over 59
 		printf("Second cannot be negative or greater than 59.\n");
 	} else {
 	
@@ -137,7 +140,7 @@ void open_results() {
 
 int main(void) {
 	
-	int quit = 1, hours, minutes, seconds;
+	int quit = 1, hours, minutes, seconds, arguments;
 	char input[40], command[1], lastname[20], team[20];
 	
 	while(quit) {
@@ -151,12 +154,12 @@ int main(void) {
 		switch(input[0])
 			{
 				case 'A':
-					sscanf(input, "%s %s %s %d %d %d", command, lastname, team, &hours, &minutes, &seconds);
-					new_driver(add_new, lastname, team);
+					arguments = sscanf(input, "%s %s %s %d %d %d", command, lastname, team, &hours, &minutes, &seconds);
+					new_driver(add_new, lastname, team, arguments);
 					break;
 				case 'U':
-					sscanf(input, "%s %s %d %d %d", command, lastname, &hours, &minutes, &seconds);
-					update_total_time(lastname, hours, minutes, seconds);
+					arguments = sscanf(input, "%s %s %d %d %d", command, lastname, &hours, &minutes, &seconds);
+					update_total_time(lastname, hours, minutes, seconds, arguments);
 					break;
 				case 'L':
 					print_situation();
