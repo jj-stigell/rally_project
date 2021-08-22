@@ -51,7 +51,7 @@ void new_driver(struct driver *add_new, char *input_lastname, char *input_team, 
 void update_total_time(char *lastname, int hours, int minutes, int seconds, int arguments) {
 	
 	if (arguments < 5) { 
-		printf("A should be followed by exactly 4 arguments.\n");
+		printf("U should be followed by exactly 4 arguments.\n");
 	}  else if (!driver_exist(lastname)) { //check if driver exist. 
 		printf("Driver \"%s\" does not exist.\n", lastname);
 	} else if (hours < 0) { //check if hours are negative.
